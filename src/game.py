@@ -1,3 +1,4 @@
+from os import system, name
 from random import randint
 from algos.Random import Random
 from algos.Minimax import Minimax
@@ -16,8 +17,21 @@ AI_PIECE = 'O'
 HUMAN_TURN = 1
 AI_TURN = 0
 
+# enter game mode here
+game_mode = "random"
+
+def clear_terminal():
+    # clear for linux / macOS
+    if name == 'posix':
+        _ = system('clear')
+    # clear for windows
+    else:
+        _ = system('cls')
 
 def print_board():
+    clear_terminal()
+    print("*************************************")
+    print("")
     for row in range(ROWS):
         print('      |', end='')
         for col in range(COLUMNS):
@@ -41,28 +55,30 @@ def check_win(player_piece):
         for row in range(ROWS):
             if board[row][col] == piece and board[row][col+1] == piece and board[row][col+2] == piece and board[row][col+3] == piece:
                 print("###horizontal win")
-                sys.exit(1)
+                return True
 
     # check for vertical win
     for col in range(COLUMNS):
         for row in range(ROWS-3):
             if board[row][col] == piece and board[row+1][col] == piece and board[row+2][col] == piece and board[row+3][col] == piece:
                 print("###vertical win")
-                sys.exit(1)
+                return True
 
     # check for rising diagonal win
     for col in range(COLUMNS-3):
         for row in range(ROWS-3):
             if board[row][col] == piece and board[row+1][col+1] == piece and board[row+2][col+2] == piece and board[row+3][col+3] == piece:
                 print("###rising diagonal win")
-                sys.exit(1)
+                return True
 
     # check for shrinking diagonal win
     for col in range(COLUMNS-3):
         for row in range(ROWS):
             if board[row][col] == piece and board[row-1][col+1] == piece and board[row-2][col+2] == piece and board[row-3][col+3] == piece:
                 print("###shrinking diagonal win")
-                sys.exit(1)
+                return True
+    
+    return False
 
 def make_move(col, piece):
     piece_placed = False
@@ -82,8 +98,7 @@ def main():
     print("*************************************")
     print_board()
 
-    # choose game mode
-    game_mode = "random"
+    # check the chosen mode
     if game_mode == "random":
         modus = Random(board, ROWS, COLUMNS, AI_PIECE, HUMAN_PIECE)
     if game_mode == "minimax":
@@ -104,7 +119,11 @@ def main():
 
             make_move(chosen_col, HUMAN_PIECE)
 
-            check_win(HUMAN_PIECE)
+            if check_win(HUMAN_PIECE):
+                print_board()
+                print("WIN HUMAN")
+                break
+
             curr_turn = AI_TURN
 
         # AI makes a move
@@ -116,11 +135,17 @@ def main():
 
             make_move(chosen_col, AI_PIECE)
 
-            check_win(AI_PIECE)
+            if check_win(AI_PIECE):
+                print_board()
+                print("WIN AI")
+                break
+
             curr_turn = HUMAN_TURN
 
         # print updated board after every move
         print_board()
+    
+    sys.exit(1)
 
 
 if __name__ == '__main__':
