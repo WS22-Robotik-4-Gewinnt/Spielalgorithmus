@@ -1,4 +1,7 @@
+from utils import check_win
 
+HUMAN_PIECE = 'X'
+AI_PIECE = 'O'
 
 class Minimax():
     def __init__(self, curr_board, row_count, column_count, ai_piece, human_piece):
@@ -9,15 +12,15 @@ class Minimax():
         self.human_piece = human_piece
 
     def choose_column(self):
-        col, minimax_score = self.mini_max(5, True)
+        col, minimax_score = self.mini_max(self.board, 5, True)
         print(minimax_score)
         return col
 
-    def get_valid_locations(self):
+    def get_valid_locations(self, board):
         valid_locations = []
-        
+
         for column in range(self.columns):
-            if self.board[0][column] == 0:
+            if board[0][column] == ' ':
                 valid_locations.append(column)
 
         return valid_locations
@@ -26,26 +29,15 @@ class Minimax():
         for r in range(self.rows-1, -1, -1):
             if self.board[r][col] == 0:
                 return r
-
-    def make_move(self, board, col, piece):
-        piece_placed = False
-
-        # five because counting starts by zero
-        x = 5
-
-        while not piece_placed:
-            if board[x][col-1] == " ":
-                board[x][col-1] = piece
-                piece_placed = True
-            x -= 1
+    
+    def terminal(self, board):
+        return check_win(board, HUMAN_PIECE) or check_win(board, AI_PIECE) or len(self.get_valid_locations(board)) == 0
 
     # look at a part that contains 4 locations and rate as score
-    def calc_area(self, area, player):
+    def calc_area(self, area):
         score = 0
         opponent = self.human_piece
-
-        if player == self.human_piece:
-            opponent = self.ai_piece
+        player = self.ai_piece
 
         if area.count(player) == 4:
             score += 15
@@ -58,24 +50,31 @@ class Minimax():
 
         return score
 
-    def calc_utility(self):
+    def calc_utility(self, board):
         score = 0
         area = []
-        ## TODO: Score center column
+        
+        # TODO: Score center column
+        #center_array = [int(i) for i in list(self.board[:,COLS//2])]
+        #center_count = center_array.count(piece)
+        #score += center_count * 6
 
-        ## Score Horizontal
+        # score horizontal 24
         for row in range(self.rows):
-            for col in range(self.rows - 3):
-                score += self.calc_area(self.board[row,col:col+4])
-
+            for col in range(self.columns - 3):
+                score += self.calc_area(board[row][col:col+4])
+        
+        # score vertical 21
         for col in range(self.columns):
             for row in range(self.rows - 3):
-                score += self.calc_area(self.board[row:row+4,col])
+                for x in range(4):
+                    area.append(board[row][col])
+                score += self.calc_area(area)
 
         for row in range(self.rows - 3):
             for col in range(self.columns - 3):
                 for x in range(4):
-                    area.append(self.board[row-x,col-x])
+                    area.append(board[row-x][col-x])
 
                 score += self.calc_area(area)
                 area = []
@@ -83,30 +82,38 @@ class Minimax():
         for row in range(3, self.rows):
             for col in range(self.columns-3):
                 for x in range(4):
-                    area.append(self.board[row-x,col+x])
+                    area.append(board[row-x][col+x])
                 
                 score += self.calc_area(area)
                 area = []
+    
+        return score
 
     # depth first search
-    def mini_max(self, depth, maximizing_player):
+    def mini_max(self, board, depth, maximizing_player):
 
-        possible_cols = self.get_valid_locations()
-
-        print(len(possible_cols))
+        possible_cols = self.get_valid_locations(board)
+        is_terminal = self.terminal(board)
 
         # TODO: return current value
         if depth == 0:
-            return 10, 123
+            if is_terminal:
+                if check_win(self.board, AI_PIECE):
+                    return None, 123456
+                elif check_win(self.board, HUMAN_PIECE):
+                    return None, -123456
+                else: # Game is over, no more valid moves
+                    return None, 0
+            else:
+                return None, self.calc_utility(board)
 
         if maximizing_player:
             value = -1000
             column = 1
             # iterate over possible columns
             for col in possible_cols:
-                board_cp = self.board.copy()
-                self.make_move(board_cp, col, self.ai_piece)
-
+                board_cp = board.copy()
+                make_move(board_cp, col, self.ai_piece)
                 new_score = self.mini_max(board_cp, depth - 1, False)[1]
 
                 if new_score > value:
@@ -126,7 +133,7 @@ class Minimax():
 
             for col in possible_cols:
                 board_cp = self.board.copy()
-                self.make_move(board_cp, col, self.human_piece)
+                make_move(board_cp, col, self.human_piece)
                 new_score = self.mini_max(board_cp, depth-1, True)[1]
 
                 if new_score < value:

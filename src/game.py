@@ -1,7 +1,9 @@
 from os import system, name
 from random import randint
+
 from algos.Random import Random
 from algos.Minimax import Minimax
+from utils import full_board, check_win, make_move
 
 import sys
 
@@ -39,59 +41,6 @@ def print_board():
         print('\n')
     print('      |1|2|3|4|5|6|7|')
 
-def full_board():
-    for row in range(ROWS):
-        for col in range(COLUMNS):
-            if board[row][col] == ' ':
-                return False
-
-    return True
-
-def check_win(player_piece):
-    piece = player_piece
-
-    # check for horizontal win
-    for col in range(COLUMNS-3):
-        for row in range(ROWS):
-            if board[row][col] == piece and board[row][col+1] == piece and board[row][col+2] == piece and board[row][col+3] == piece:
-                print("###horizontal win")
-                return True
-
-    # check for vertical win
-    for col in range(COLUMNS):
-        for row in range(ROWS-3):
-            if board[row][col] == piece and board[row+1][col] == piece and board[row+2][col] == piece and board[row+3][col] == piece:
-                print("###vertical win")
-                return True
-
-    # check for rising diagonal win
-    for col in range(COLUMNS-3):
-        for row in range(ROWS-3):
-            if board[row][col] == piece and board[row+1][col+1] == piece and board[row+2][col+2] == piece and board[row+3][col+3] == piece:
-                print("###rising diagonal win")
-                return True
-
-    # check for shrinking diagonal win
-    for col in range(COLUMNS-3):
-        for row in range(ROWS):
-            if board[row][col] == piece and board[row-1][col+1] == piece and board[row-2][col+2] == piece and board[row-3][col+3] == piece:
-                print("###shrinking diagonal win")
-                return True
-    
-    return False
-
-def make_move(col, piece):
-    piece_placed = False
-
-    # five because counting starts by zero
-    x = 5
-
-    while not piece_placed:
-        if board[x][col-1] == " ":
-            board[x][col-1] = piece
-            piece_placed = True
-        x -= 1
-
 def main():
     print("*************************************")
     print("Welcome to the game connect four!")
@@ -108,7 +57,7 @@ def main():
     curr_turn = randint(AI_TURN, HUMAN_TURN)
 
     # loop as long as there is no winner 
-    while not full_board():
+    while not full_board(board):
 
         # Human makes a move
         if HUMAN_TURN == curr_turn:
@@ -117,9 +66,9 @@ def main():
 
             chosen_col = int(input("\nInput a number from 1-7 for column\n"))
 
-            make_move(chosen_col, HUMAN_PIECE)
+            make_move(board, chosen_col, HUMAN_PIECE)
 
-            if check_win(HUMAN_PIECE):
+            if check_win(board, HUMAN_PIECE):
                 print_board()
                 print("WIN HUMAN")
                 break
@@ -133,9 +82,9 @@ def main():
 
             chosen_col = modus.choose_column()
 
-            make_move(chosen_col, AI_PIECE)
+            make_move(board, chosen_col, AI_PIECE)
 
-            if check_win(AI_PIECE):
+            if check_win(board, AI_PIECE):
                 print_board()
                 print("WIN AI")
                 break
