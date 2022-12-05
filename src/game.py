@@ -7,7 +7,6 @@ from utils import full_board, check_win, make_move
 
 import sys
 
-
 # some global variables
 COLUMNS = 7
 ROWS = 6
@@ -20,7 +19,7 @@ HUMAN_TURN = 1
 AI_TURN = 0
 
 # enter game mode here
-game_mode = "random"
+game_mode = "minimax"
 
 def clear_terminal():
     # clear for linux / macOS
@@ -31,7 +30,7 @@ def clear_terminal():
         _ = system('cls')
 
 def print_board():
-    clear_terminal()
+    #clear_terminal()
     print("*************************************")
     print("")
     for row in range(ROWS):
@@ -51,7 +50,7 @@ def main():
     if game_mode == "random":
         modus = Random(board, ROWS, COLUMNS, AI_PIECE, HUMAN_PIECE)
     if game_mode == "minimax":
-        modus = Minimax(board, ROWS, COLUMNS, AI_PIECE, HUMAN_PIECE)
+        modus = Minimax(board)
 
     # randomly choose who starts the game (turn)
     curr_turn = randint(AI_TURN, HUMAN_TURN)
@@ -82,7 +81,7 @@ def main():
 
             chosen_col = modus.choose_column()
 
-            make_move(board, chosen_col, AI_PIECE)
+            make_move(board, chosen_col + 1, AI_PIECE)
 
             if check_win(board, AI_PIECE):
                 print_board()

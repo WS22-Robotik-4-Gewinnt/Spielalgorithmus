@@ -46,14 +46,14 @@ def full_board(board):
 
     return True
 
-def make_move(board, col, piece):
+def make_move(curr_board, col, piece):
     piece_placed = False
 
     # five because counting starts by zero
     x = 5
 
-    while not piece_placed and x > 0:
-        if board[x][col-1] == " ":
-            board[x][col-1] = piece
+    while not piece_placed and x >= 0:
+        if curr_board[x][col-1] == " ":
+            curr_board[x][col-1] = piece
             piece_placed = True
         x -= 1
