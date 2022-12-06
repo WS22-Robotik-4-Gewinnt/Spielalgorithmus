@@ -30,7 +30,7 @@ def clear_terminal():
         _ = system('cls')
 
 def print_board():
-    #clear_terminal()
+    clear_terminal()
     print("*************************************")
     print("")
     for row in range(ROWS):
@@ -79,7 +79,7 @@ def main():
             print("*************************************")
             print("Player AI has to make the next move!")
 
-            chosen_col = modus.choose_column()
+            chosen_col = modus.choose_column(board)
 
             make_move(board, chosen_col + 1, AI_PIECE)
 

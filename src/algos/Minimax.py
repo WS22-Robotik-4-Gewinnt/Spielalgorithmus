@@ -13,8 +13,9 @@ class Minimax():
     def __init__(self, board):
         self.board = [x[:] for x in board]
 
-    def choose_column(self):
-        col, minimax_score = self.mini_max(self.board, 2, True)
+    def choose_column(self, board):
+        self.board = [x[:] for x in board]
+        col, minimax_score = self.mini_max(self.board, 4, True)
         print("the winning col: " + str(col))
         print("score for move :" + str(minimax_score))
         return col
@@ -25,7 +26,6 @@ class Minimax():
         for column in range(COLUMNS):
             if board[0][column] == ' ':
                 valid_locations.append(column)
-
         return valid_locations
 
     def check_win(self, board, player_piece):
@@ -63,10 +63,15 @@ class Minimax():
 
     def make_move(self, state, column, piece):
         temp = [x[:] for x in state]
-        for i in range(6):
+        i = 5
+
+        while i >= 0:
             if temp[i][column] == ' ':
                 temp[i][column] = piece
-                return temp
+                break
+            i -= 1
+        
+        return temp
 
     def terminal(self, board):
         return self.check_win(board, HUMAN_PIECE) or self.check_win(board, AI_PIECE) or len(self.get_valid_locations(board)) == 0
@@ -74,16 +79,14 @@ class Minimax():
     # look at a part that contains 4 locations and rate as score
     def calc_area(self, area):
         score = 0
-        opponent = HUMAN_PIECE
-        player = AI_PIECE
 
-        if area.count(player) == 4:
+        if area.count(AI_PIECE) == 4:
             score += 15
-        if area.count(player) == 3 and area.count(' ') == 1:
+        if area.count(AI_PIECE) == 3 and area.count(' ') == 1:
             score += 3
-        if area.count(player) == 2 and area.count(' ') == 2:
+        if area.count(AI_PIECE) == 2 and area.count(' ') == 2:
             score += 1
-        if area.count(opponent) == 3 and area.count(' ') == 1:
+        if area.count(HUMAN_PIECE) == 3 and area.count(' ') == 1:
             score -= 2
 
         return score
@@ -95,7 +98,7 @@ class Minimax():
         # extra score for the center column
         center_col = [board[row][3] for row in range(6)]
         center_score = center_col.count(AI_PIECE)
-        score += center_score * 1.5
+        score += center_score * 3.5
 
         # score horizontal 24
         for row in range(ROWS):
@@ -131,9 +134,7 @@ class Minimax():
 
     # depth first search
     def mini_max(self, board, depth, maximizing_player):
-
         possible_cols = self.get_valid_locations(board)
-        print(possible_cols)
         is_terminal = self.terminal(board)
 
         if depth == 0 or is_terminal:
@@ -142,7 +143,7 @@ class Minimax():
                     return None, 123456
                 elif self.check_win(board, HUMAN_PIECE):
                     return None, -123456
-                else: # Game is over, no more valid moves
+                else: # game is over, no more valid moves
                     return None, 0
             else:
                 return None, self.calc_utility(board)
@@ -154,7 +155,7 @@ class Minimax():
             for col in possible_cols:
                 copy = self.make_move(board, col, AI_PIECE)
                 new_score = self.mini_max(copy, depth - 1, False)[1]
-                #print("maximize: " + str(value) + " " + "new_score: " + str(new_score))
+                print("maximize: " + str(value) + " " + "new_score: " + str(new_score) + " column: " + str(col) + " depth: " + str(depth))
 
                 if new_score > value:
                     value = new_score
@@ -170,7 +171,7 @@ class Minimax():
             for col in possible_cols:
                 copy = self.make_move(board, col, HUMAN_PIECE)
                 new_score = self.mini_max(copy, depth-1, True)[1]
-                #print("minimize: " + str(value) + " " + "new_score: " + str(new_score))
+                print("minimize: " + str(value) + " " + "new_score: " + str(new_score) + " column: " + str(col) + " depth: " + str(depth))
 
                 if new_score < value:
                     value = new_score
