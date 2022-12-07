@@ -1,5 +1,12 @@
 # Spielalgorithmus
 
+## Module
+```
+pip install requests
+pip install uvicorn[standard]
+```
+Ggf. muss uvicorn zu %PATH% hinzugefügt werden.
+
 ## Datenstruktur
 ### Spielfeld 7x6
 ```
@@ -17,9 +24,13 @@
 ## Schnittstellen / Kommunikation
 ###  Bildverarbeitung -> Spielalgorithmus
 ```json
-{ "Column1": [{"Row1":"h"}, {"Row2":"h"}, {"Row3":"h"}, {"Row4":"r"}, {"Row5":"h"}, {"Row6":"r"}, {"Row7":"r"}],
-     "Column2": [{"Row1":"h"}, {"Row2":"r"}, {"Row3":"r"}, {"Row4":"h"}, {"Row5":"r"}, {"Row6":"0"}, {"Row7":"r"}],
-     "Column3": [{"Row1":"h"}, {"Row2":"0"}, {"Row3":"0"}, {"Row4":"r"}, {"Row5":"0"}, {"Row6":"0"}, {"Row7":"0"}],
+{ "Column1": {"Row1":"0", "Row2":"h", "Row3":"r", "Row4":"r", "Row5":"h", "Row6":"0"},
+"Column2": {"Row1":"0", "Row2":"h", "Row3":"0", "Row4":"r", "Row5":"r", "Row6":"0"},
+"Column3": {"Row1":"0", "Row2":"0", "Row3":"0", "Row4":"0", "Row5":"h", "Row6":"0"},
+"Column4": {"Row1":"0", "Row2":"0", "Row3":"0", "Row4":"0", "Row5":"0", "Row6":"0"},
+"Column5": {"Row1":"0", "Row2":"0", "Row3":"0", "Row4":"0", "Row5":"0", "Row6":"0"},
+"Column6": {"Row1":"0", "Row2":"0", "Row3":"0", "Row4":"0", "Row5":"0", "Row6":"0"},
+"Column7": {"Row1":"0", "Row2":"0", "Row3":"0", "Row4":"0", "Row5":"0", "Row6":"0"}
 }
 ```
 

@@ -1,7 +1,7 @@
 import random
 
-HUMAN_PIECE = 'X'
-AI_PIECE = 'O'
+HUMAN_PIECE = 'h'
+AI_PIECE = 'r'
 
 COLUMNS = 7
 ROWS = 6

@@ -2,8 +2,8 @@
 COLUMNS = 7
 ROWS = 6
 
-HUMAN_PIECE = 'X'
-AI_PIECE = 'O'
+#HUMAN_PIECE = 'X'
+#AI_PIECE = 'O'
 
 def check_win(board, player_piece):
     piece = player_piece
