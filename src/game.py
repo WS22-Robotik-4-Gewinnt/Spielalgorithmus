@@ -12,8 +12,8 @@ COLUMNS = 7
 ROWS = 6
 board = [[' ' for x in range(COLUMNS)] for y in range(ROWS)]
 
-HUMAN_PIECE = 'X'
-AI_PIECE = 'O'
+HUMAN_PIECE = 'h'
+AI_PIECE = 'r'
 
 HUMAN_TURN = 1
 AI_TURN = 0

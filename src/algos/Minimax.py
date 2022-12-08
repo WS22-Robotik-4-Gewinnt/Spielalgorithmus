@@ -2,6 +2,9 @@ import random
 
 HUMAN_PIECE = 'h'
 AI_PIECE = 'r'
+EMPTY_PIECE = '0'
+
+DEBUG_MINIMAX = False
 
 COLUMNS = 7
 ROWS = 6
@@ -16,6 +19,7 @@ class Minimax():
     def choose_column(self, board):
         self.board = [x[:] for x in board]
         col, minimax_score = self.mini_max(self.board, 4, True)
+        print("==================")
         print("the winning col: " + str(col))
         print("score for move :" + str(minimax_score))
         return col
@@ -24,7 +28,7 @@ class Minimax():
         valid_locations = []
 
         for column in range(COLUMNS):
-            if board[0][column] == ' ':
+            if board[5][column] == EMPTY_PIECE:
                 valid_locations.append(column)
         return valid_locations
 
@@ -35,41 +39,45 @@ class Minimax():
         for col in range(COLUMNS-3):
             for row in range(ROWS):
                 if board[row][col] == piece and board[row][col+1] == piece and board[row][col+2] == piece and board[row][col+3] == piece:
-                    print("###horizontal win")
+                    if DEBUG_MINIMAX:
+                        print("###horizontal win")
                     return True
 
         # check for vertical win
         for col in range(COLUMNS):
             for row in range(ROWS-3):
                 if board[row][col] == piece and board[row+1][col] == piece and board[row+2][col] == piece and board[row+3][col] == piece:
-                    print("###vertical win")
+                    if DEBUG_MINIMAX:
+                        print("###vertical win")
                     return True
 
         # check for rising diagonal win
         for col in range(COLUMNS-3):
             for row in range(ROWS-3):
                 if board[row][col] == piece and board[row+1][col+1] == piece and board[row+2][col+2] == piece and board[row+3][col+3] == piece:
-                    print("###rising diagonal win")
+                    if DEBUG_MINIMAX:
+                        print("###rising diagonal win")
                     return True
 
         # check for shrinking diagonal win
         for col in range(COLUMNS-3):
             for row in range(ROWS):
                 if board[row][col] == piece and board[row-1][col+1] == piece and board[row-2][col+2] == piece and board[row-3][col+3] == piece:
-                    print("###shrinking diagonal win")
+                    if DEBUG_MINIMAX:
+                        print("###shrinking diagonal win")
                     return True
 
         return False
 
     def make_move(self, state, column, piece):
         temp = [x[:] for x in state]
-        i = 5
+        i = 0
 
-        while i >= 0:
-            if temp[i][column] == ' ':
+        while i <= 5:
+            if temp[i][column] == EMPTY_PIECE:
                 temp[i][column] = piece
                 break
-            i -= 1
+            i += 1
         
         return temp
 
@@ -82,11 +90,11 @@ class Minimax():
 
         if area.count(AI_PIECE) == 4:
             score += 15
-        if area.count(AI_PIECE) == 3 and area.count(' ') == 1:
+        if area.count(AI_PIECE) == 3 and area.count(EMPTY_PIECE) == 1:
             score += 3
-        if area.count(AI_PIECE) == 2 and area.count(' ') == 2:
+        if area.count(AI_PIECE) == 2 and area.count(EMPTY_PIECE) == 2:
             score += 1
-        if area.count(HUMAN_PIECE) == 3 and area.count(' ') == 1:
+        if area.count(HUMAN_PIECE) == 3 and area.count(EMPTY_PIECE) == 1:
             score -= 2
 
         return score
@@ -155,7 +163,9 @@ class Minimax():
             for col in possible_cols:
                 copy = self.make_move(board, col, AI_PIECE)
                 new_score = self.mini_max(copy, depth - 1, False)[1]
-                print("maximize: " + str(value) + " " + "new_score: " + str(new_score) + " column: " + str(col) + " depth: " + str(depth))
+
+                if DEBUG_MINIMAX:
+                    print("maximize: " + str(value) + " " + "new_score: " + str(new_score) + " column: " + str(col) + " depth: " + str(depth))
 
                 if new_score > value:
                     value = new_score
@@ -171,7 +181,9 @@ class Minimax():
             for col in possible_cols:
                 copy = self.make_move(board, col, HUMAN_PIECE)
                 new_score = self.mini_max(copy, depth-1, True)[1]
-                print("minimize: " + str(value) + " " + "new_score: " + str(new_score) + " column: " + str(col) + " depth: " + str(depth))
+
+                if DEBUG_MINIMAX:
+                    print("minimize: " + str(value) + " " + "new_score: " + str(new_score) + " column: " + str(col) + " depth: " + str(depth))
 
                 if new_score < value:
                     value = new_score

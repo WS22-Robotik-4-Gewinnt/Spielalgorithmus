@@ -18,12 +18,13 @@ from pydantic import BaseModel
 
 # h = Human Player | r = Robot Player | 0 = empty space
 
-# Feld={ "Column1": [{"Row1":"h"}, {"Row2":"h"}, {"Row3":"h"}, {"Row4":"r"}, {"Row5":"h"}, {"Row6":"r"}],
-#        "Column2": [{"Row1":"h"}, {"Row2":"h"}, {"Row3":"h"}, {"Row4":"r"}, {"Row5":"h"}, {"Row6":"r"}],
-#        "Column3": [{"Row1":"h"}, {"Row2":"h"}, {"Row3":"h"}, {"Row4":"r"}, {"Row5":"h"}, {"Row6":"r"}],
-#        "Column4": [{"Row1":"h"}, {"Row2":"h"}, {"Row3":"h"}, {"Row4":"r"}, {"Row5":"h"}, {"Row6":"r"}],
-#        "Column5": [{"Row1":"h"}, {"Row2":"h"}, {"Row3":"h"}, {"Row4":"r"}, {"Row5":"h"}, {"Row6":"r"}],
-#        "Column6": [{"Row1":"h"}, {"Row2":"h"}, {"Row3":"h"}, {"Row4":"r"}, {"Row5":"h"}, {"Row6":"r"}]
+# Feld={ "Column1": {"Row1":"h", "Row2":"0", "Row3":"0", "Row4":"0", "Row5":"0", "Row6":"0"},
+# "Column2": {"Row1":"0", "Row2":"0", "Row3":"0", "Row4":"0", "Row5":"0", "Row6":"0"},
+# "Column3": {"Row1":"0", "Row2":"0", "Row3":"0", "Row4":"0", "Row5":"0", "Row6":"0"},
+# "Column4": {"Row1":"0", "Row2":"0", "Row3":"0", "Row4":"0", "Row5":"0", "Row6":"0"},
+# "Column5": {"Row1":"0", "Row2":"0", "Row3":"0", "Row4":"0", "Row5":"0", "Row6":"0"},
+# "Column6": {"Row1":"h", "Row2":"h", "Row3":"h", "Row4":"0", "Row5":"0", "Row6":"0"},
+# "Column7": {"Row1":"r", "Row2":"r", "Row3":"0", "Row4":"0", "Row5":"0", "Row6":"0"}
 # }
 
 ROWS = 6
@@ -58,15 +59,17 @@ async def root():
     return {"message": "Hello World"}
 
 
+# NOT USED
 @app.get("/findNextMove")
 async def calculateMove():
     return {"col": 5, "row": 3}
-
 
 @app.post("/updateBoard")
 async def updateBoard(newBoard: Board):
     # import board
     pb = newBoard
+
+    print(pb)
 
     # convert to internal format
     board[0] = [pb.Column1.Row1, pb.Column2.Row1, pb.Column3.Row1, pb.Column4.Row1,
@@ -82,14 +85,17 @@ async def updateBoard(newBoard: Board):
     board[5] = [pb.Column1.Row6, pb.Column2.Row6, pb.Column3.Row6, pb.Column4.Row6,
                 pb.Column5.Row6, pb.Column6.Row6, pb.Column7.Row6]
 
+    print(board)
+
     # run minimax
     mini = Minimax.Minimax(board)
-    moveCol, moveRow = mini.mini_max(board, 4, True)
+    #moveCol, moveRow = mini.choose_column(board)
+    moveCol = mini.choose_column(board) + 1
 
     # send move to robot service
     # r = requests.post('http://localhost:8096/move', "ok", {"col": moveCol, "row": moveRow})
 
-    return {"col": moveCol, "val": moveRow}
+    return {"col": moveCol, "val": 0}
 
 
 if __name__ == "__main__":
