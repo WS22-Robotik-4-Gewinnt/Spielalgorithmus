@@ -90,7 +90,7 @@ async def updateBoard(newBoard: Board):
     # run minimax
     mini = Minimax.Minimax(board)
     #moveCol, moveRow = mini.choose_column(board)
-    moveCol = mini.choose_column(board) + 1
+    moveCol, moveRow = mini.choose_column(board) + 1
 
     # send move to robot service
     # r = requests.post('http://localhost:8096/move', "ok", {"col": moveCol, "row": moveRow})

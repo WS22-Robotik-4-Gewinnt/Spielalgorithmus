@@ -19,10 +19,16 @@ class Minimax():
     def choose_column(self, board):
         self.board = [x[:] for x in board]
         col, minimax_score = self.mini_max(self.board, 4, True)
+        row = self.get_row(self.board, col)
         print("==================")
         print("the winning col: " + str(col))
         print("score for move :" + str(minimax_score))
-        return col
+        return col, row
+
+    def get_row(self, board, col):
+        for row in range(ROWS):
+            if board[row][col] == EMPTY_PIECE:
+                return row
 
     def get_valid_locations(self, board):
         valid_locations = []
