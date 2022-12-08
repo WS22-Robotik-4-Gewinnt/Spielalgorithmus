@@ -3,6 +3,7 @@
 ## Module
 ```
 pip install requests
+pip install fastapi
 pip install uvicorn[standard]
 ```
 Ggf. muss uvicorn zu %PATH% hinzugefügt werden.
