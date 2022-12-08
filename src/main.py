@@ -89,13 +89,31 @@ async def updateBoard(newBoard: Board):
 
     # run minimax
     mini = Minimax.Minimax(board)
-    #moveCol, moveRow = mini.choose_column(board)
-    moveCol, moveRow = mini.choose_column(board) + 1
+    moveCol, moveRow, score = mini.choose_column(board)
 
-    # send move to robot service
-    # r = requests.post('http://localhost:8096/move', "ok", {"col": moveCol, "row": moveRow})
+    if moveCol is None:
+        # SPIELENDE
+        print("Ende")
+        if score == 0:
+            # DRAW
+            # r = requests.post('http://localhost:8096/end', "ok", {"winner": "DRAW"})
+            pass
+        elif score > 0:
+            # WIN ROBOT
+            # r = requests.post('http://localhost:8096/end', "ok", {"winner": "ROBOT"})
+            pass
+        else:
+            # WIN HUMAN
+            # r = requests.post('http://localhost:8096/end', "ok", {"winner": "HUMAN"})
+            pass
+    else:
+        # Spiel geht weiter
 
-    return {"col": moveCol, "val": 0}
+        # send move to robot service
+        # r = requests.post('http://localhost:8096/move', "ok", {"col": moveCol + 1, "row": moveRow + 1})
+        pass
+
+    return {"col": moveCol + 1, "row": moveRow + 1}
 
 
 if __name__ == "__main__":

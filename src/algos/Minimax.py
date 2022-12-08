@@ -23,7 +23,7 @@ class Minimax():
         print("==================")
         print("the winning col: " + str(col))
         print("score for move :" + str(minimax_score))
-        return col, row
+        return col, row, minimax_score
 
     def get_row(self, board, col):
         for row in range(ROWS):
