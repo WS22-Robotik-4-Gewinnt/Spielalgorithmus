@@ -21,6 +21,12 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.12' 
+    - run: pip install -r requirements.txt
+    
     - name: Log in to the Container registry
       uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
       with:
@@ -40,6 +46,6 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        #tags: ${{ steps.meta.outputs.tags }}
-        tags: ghcr.io/ws22-robotik-4-gewinnt/connect4robot:gamelogic
+        tags: ${{ steps.meta.outputs.tags }}
+        #tags: ghcr.io/ws22-robotik-4-gewinnt/connect4robot:gamelogic
         labels: ${{ steps.meta.outputs.labels }}
