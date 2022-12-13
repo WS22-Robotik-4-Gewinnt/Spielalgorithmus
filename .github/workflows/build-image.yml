@@ -41,5 +41,5 @@ jobs:
         file: ./Dockerfile
         push: true
         #tags: ${{ steps.meta.outputs.tags }}
-        tags: ghcr.io/WS22-Robotik-4-Gewinnt/connect4robot:gamelogic
+        tags: ghcr.io/ws22-robotik-4-gewinnt/connect4robot:gamelogic
         labels: ${{ steps.meta.outputs.labels }}
