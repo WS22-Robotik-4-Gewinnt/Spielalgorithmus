@@ -12,13 +12,16 @@ ROWS = 6
 class Minimax():
 
     board = []
+    difficulty = 0
     
-    def __init__(self, board):
+    def __init__(self, board, difficulty):
         self.board = [x[:] for x in board]
+        self.difficulty = difficulty
 
     def choose_column(self, board):
         self.board = [x[:] for x in board]
-        col, minimax_score = self.mini_max(self.board, 4, True)
+        #col, minimax_score = self.mini_max(self.board, 4, True)
+        col, minimax_score = self.mini_max(self.board, self.difficulty, True)
         row = self.get_row(self.board, col)
         print("==================")
         print("the winning col: " + str(col))

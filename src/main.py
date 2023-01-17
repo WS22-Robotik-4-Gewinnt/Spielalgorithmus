@@ -48,6 +48,7 @@ class Board(BaseModel):
     Column5: Column
     Column6: Column
     Column7: Column
+    Difficulty: int
 
 
 app = FastAPI()
@@ -88,7 +89,7 @@ async def updateBoard(newBoard: Board):
     print(board)
 
     # run minimax
-    mini = Minimax.Minimax(board)
+    mini = Minimax.Minimax(board, newBoard.Difficulty)
     moveCol, moveRow, score = mini.choose_column(board)
 
     if moveCol is None:
