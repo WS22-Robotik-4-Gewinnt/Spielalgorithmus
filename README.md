@@ -45,5 +45,83 @@ Ggf. muss uvicorn zu %PATH% hinzugefügt werden.
 
 ## Algorithmen
 ### Minimax
-Der Minimax-Algorithmus ist ein Spielstrategie für sogenannte Nullsummenspiele, die außerdem für zwei Spieler ausgelegt sind. Neben Vier gewinnt kann der Algorithmus also beispielsweise auch für Schach oder Go eingesetzt werden.
-Die Strategie lässt sich durch einen Baum darstellen, der die möglichen Züge für die Spieler darstellt. Die Höhe bestimmt abwechselnd die Züge des Minimizing bzw. Maximizing Players. Anschließend wird eine Tiefensuche auf einem Baum durchgeführt, die für die Stellungen auf dem Spielfeld Punkte vergibt. 
+#### Allgemein
+Der Minimax-Algorithmus ist eine Spielstrategie für sogennante Nullsummenspiele wie Vier gewinnt oder Tic Tac Toe.
+Das Ziel ist es den optimalen nächsten Spielzug zu finden.
+Beim Minimax gibt es zwei Spieler, die Max und Min genannt werden, wobei Max in unserem Fall den Roboter repräsentiert.
+In abwechselnder Reihenfolge betrachtet der Algorithmus alle möglichen Kombination von Zügen für Max und Min.
+Anhand dieser Möglichkeiten wird ein Entscheidungsbaum aufgespannt.
+Jeder Möglichkeit wird anhand des Zustandes auf dem Spielbrett ein Wert (Score) zugewiesen.
+Die Möglichkeit, die in den höchsten Score bringt wird letztendlich vom Algorithmus gewählt.
+
+Der Algorithmus arbeitet rekursiv und wechselt jeden Zug zwischen dem "minimizing" und "maximizing" Spieler (siehe Abbildung).
+Dabei wird die Suchtiefe für den Entscheidungsbaum pro Zug um eins verringert.
+Um den perfekten Zug zu finden wird für jedem möglichen Spielzug ein Score für das Spielfeld berechnet.
+Dazu wird das Spielfeld in Teilbereiche von vier Kästchen eingeteilt.
+Dafür werden sowohl horizontale, vertikale, diagonal aufsteigende und diagonal absteigende Optionen berücksichtigt.
+Teil des Spielfelds wird übergeben und anhand einer Heuristik ein Score berechnet.
+
+![Minimax](minimax.jpg)
+
+#### Heuristik
+Ein heuristischer Score wird für ein Segment von vier Kästchen berechnet.
+Ein Kästchen kann dabei einen Spielstein des Roboters, des Menschens oder gar keinen Spielstein enthalten.
+
+| Situation        | Score      |
+| ------------- |:-------------:|
+| Vier Spielsteine einer Farbe  | 15 |
+| Drei Spielsteine einer Farbe und ein leeres Kästchen | 3 |
+| Zwei Spielsteine einer Farbe und zwei leere Kästchen | 1 |
+| Drei gegnerische Spielsteine und zwei leere Kästchen | -2 |
+| Spielsteine einer Farbe (x) in der mittleren Spalte (4) | x * 3.5 |
+
+
+#### Endbedingungen für den Algorithmus
+Der Minimax berechnet so lange neue Möglichkeiten bis eines der folgenden Ereignisse eintritt. 
+Zum Abschluss gibt der Algorithmus die Spalte für den nächsten Zug und den Score für diesen Zug zurück.
+
+- Suchtiefe erreicht den Wert 0
+- Volles Spielfeld (Unentschieden)
+- Sieg für den Roboter
+- Sieg für den Menschen
+
+#### Pseudocode Minimax-Algorithmus
+
+```python
+def mini_max(board, depth, maximizing_player):
+
+    if depth == 0 or is_terminal:
+        return col, heuristic value
+
+    if maximizing_player:
+        value = -1000
+        for col in possible_cols:
+            new_score = self.mini_max(board_copy, depth - 1, False)[1]
+
+            if new_score > value:
+                value = new_score
+                column = col
+        return column, value
+
+    else:
+        value = 1000
+        for col in possible_cols:
+            new_score = self.mini_max(board_copy, depth-1, True)[1]
+
+            if new_score < value:
+                value = new_score
+                column = col
+        return column, value
+```
+
+Die rekursive Funktion erhält das aktuelle Spielfeld, die aktuelle Tiefe sowie den aktuellen Spieler (min oder max).
+Zu Beginn wird überprüft, ob eine Endbedingung für die Funktion erreicht wurde.
+Sollte dies der Fall sein wird mithilfe der zuvor definierten Heuristik der Score für das Spielfeld und
+die Spalte für den nächsten Zug zurückgegeben.
+In dem Fall, dass das Spiel noch nicht beendet ist wird mit einer if-Bedingung entweder Max oder Min ausgewählt.
+Max versucht den Score durch testen der möglichen Spielzüge zu erhöhen.
+Min hingegen versucht den Score zu verkleinern.
+
+#### Programmiersprache / Tools
+Der Algorithmus wurde in Python implementiert.
+Zur Implementierung wurden keine externen Bibliotheken eingesetzt.
