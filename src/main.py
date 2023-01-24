@@ -97,21 +97,21 @@ async def updateBoard(newBoard: Board):
         print("Ende")
         if score == 0:
             # DRAW
-            # r = requests.post('http://0.0.0.0:8096/end', "ok", {"winner": "DRAW"})
+            r = requests.post('http://0.0.0.0:8096/end', "ok", {"winner": "DRAW"})
             pass
         elif score > 0:
             # WIN ROBOT
-            # r = requests.post('http://0.0.0.0:8096/end', "ok", {"winner": "ROBOT"})
+            r = requests.post('http://0.0.0.0:8096/end', "ok", {"winner": "ROBOT"})
             pass
         else:
             # WIN HUMAN
-            # r = requests.post('http://0.0.0.0:8096/end', "ok", {"winner": "HUMAN"})
+            r = requests.post('http://0.0.0.0:8096/end', "ok", {"winner": "HUMAN"})
             pass
     else:
         # Spiel geht weiter
 
         # send move to robot service
-        # r = requests.post('http://0.0.0.0:8096/move', "ok", {"col": moveCol + 1, "row": moveRow + 1})
+        r = requests.post('http://0.0.0.0:8096/move', "ok", {"col": moveCol + 1, "row": moveRow + 1})
         pass
 
     return {"col": moveCol + 1, "row": moveRow + 1}
