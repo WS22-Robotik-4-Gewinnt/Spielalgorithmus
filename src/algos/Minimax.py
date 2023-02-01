@@ -22,7 +22,10 @@ class Minimax():
         self.board = [x[:] for x in board]
         #col, minimax_score = self.mini_max(self.board, 4, True)
         col, minimax_score = self.mini_max(self.board, self.difficulty, True)
-        row = self.get_row(self.board, col)
+        if col is not None:
+            row = self.get_row(self.board, col)
+        else:
+            row = None
         print("==================")
         print("the winning col: " + str(col))
         print("score for move :" + str(minimax_score))
@@ -37,12 +40,13 @@ class Minimax():
         valid_locations = []
 
         for column in range(COLUMNS):
-            if board[5][column] == EMPTY_PIECE:
+            if board[0][column] == EMPTY_PIECE:
                 valid_locations.append(column)
         return valid_locations
 
     def check_win(self, board, player_piece):
         piece = player_piece
+        print("***********+++ current piece: " + str(piece))
 
         # check for horizontal win
         for col in range(COLUMNS-3):
@@ -80,14 +84,14 @@ class Minimax():
 
     def make_move(self, state, column, piece):
         temp = [x[:] for x in state]
-        i = 0
+        i = 5
 
-        while i <= 5:
+        while i >= 0:
             if temp[i][column] == EMPTY_PIECE:
                 temp[i][column] = piece
                 break
-            i += 1
-        
+            i -= 1
+
         return temp
 
     def terminal(self, board):
@@ -115,7 +119,7 @@ class Minimax():
         # extra score for the center column
         center_col = [board[row][3] for row in range(6)]
         center_score = center_col.count(AI_PIECE)
-        score += center_score * 3.5
+        score += center_score * 2.5
 
         # score horizontal 24
         for row in range(ROWS):
