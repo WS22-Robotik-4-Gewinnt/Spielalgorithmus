@@ -42,7 +42,7 @@ class Minimax():
         valid_locations = []
 
         for column in range(COLUMNS):
-            if board[0][column] == EMPTY_PIECE:
+            if board[5][column] == EMPTY_PIECE:
                 valid_locations.append(column)
         return valid_locations
 
