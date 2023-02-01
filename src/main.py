@@ -123,8 +123,8 @@ async def updateBoard(newBoard: Board):
         # positionToSend = json.loads(positionToSend)
         r = requests.post('http://localhost:8096/move', json={"col": moveCol, "row": moveRow})
         pass
-
-    return {"col": moveCol + 1, "row": moveRow + 1}
+        #"col": +str(moveCol) + 1, "row": + str(moveRow) + 1
+    return {}
 
 
 if __name__ == "__main__":

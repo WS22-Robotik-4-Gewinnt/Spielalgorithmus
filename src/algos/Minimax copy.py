@@ -4,7 +4,7 @@ HUMAN_PIECE = 'h'
 AI_PIECE = 'r'
 EMPTY_PIECE = '0'
 
-DEBUG_MINIMAX = False
+DEBUG_MINIMAX = True
 
 COLUMNS = 7
 ROWS = 6
@@ -29,7 +29,6 @@ class Minimax():
         print("==================")
         print("the winning col: " + str(col))
         print("score for move :" + str(minimax_score))
-        self.printBoard(board)
         return col, row, minimax_score
 
     def get_row(self, board, col):
@@ -42,13 +41,13 @@ class Minimax():
         valid_locations = []
 
         for column in range(COLUMNS):
-            if board[0][column] == EMPTY_PIECE:
+            if board[5][column] == EMPTY_PIECE:
                 valid_locations.append(column)
         return valid_locations
 
     def check_win(self, board, player_piece):
         piece = player_piece
-        #print("***********+++ current piece: " + str(piece))
+        print("***********+++ current piece: " + str(piece))
 
         # check for horizontal win
         for col in range(COLUMNS-3):
@@ -98,6 +97,9 @@ class Minimax():
         return temp
 
     def terminal(self, board):
+        print(self.check_win(board, HUMAN_PIECE))
+        print(self.check_win(board, AI_PIECE))
+        print(len(self.get_valid_locations(board)))
         return self.check_win(board, HUMAN_PIECE) or self.check_win(board, AI_PIECE) or len(self.get_valid_locations(board)) == 0
 
     # look at a part that contains 4 locations and rate as score
@@ -158,6 +160,14 @@ class Minimax():
 
     # depth first search
     def mini_max(self, board, depth, maximizing_player):
+        print("*************************************")
+        print("")
+        for row in range(ROWS):
+            print('      |', end='')
+            for col in range(COLUMNS):
+                print(board[row][col] + '|', end='')
+            print('\n')
+        print('      |1|2|3|4|5|6|7|')
         possible_cols = self.get_valid_locations(board)
         is_terminal = self.terminal(board)
 
@@ -206,13 +216,3 @@ class Minimax():
                     column = col
 
             return column, value
-
-    def printBoard(self, board):
-        print("*************************************")
-        print("")
-        for row in range(ROWS):
-            #print('      |', end='')
-            for col in range(COLUMNS):
-                print(board[ROWS-row-1][col] + '|', end='')
-            print('')
-        print('1|2|3|4|5|6|7|')
