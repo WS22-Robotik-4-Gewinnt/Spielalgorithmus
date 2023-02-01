@@ -7,6 +7,14 @@ import requests
 from fastapi import FastAPI
 from pydantic import BaseModel
 
+import logging
+import json
+
+# logging
+LOG = "logging_data.log"
+logging.basicConfig(filename=LOG, filemode="w", level=logging.DEBUG)
+
+
 #########################
 # 6 0  0  0  0  0  0  0 #
 # 5 0  0  0  0  0  0  0 #
@@ -70,7 +78,7 @@ async def updateBoard(newBoard: Board):
     # import board
     pb = newBoard
 
-    print(pb)
+    logging.info(str(pb))
 
     # convert to internal format
     board[0] = [pb.Column1.Row1, pb.Column2.Row1, pb.Column3.Row1, pb.Column4.Row1,
@@ -97,21 +105,23 @@ async def updateBoard(newBoard: Board):
         print("Ende")
         if score == 0:
             # DRAW
-            # r = requests.post('http://0.0.0.0:8096/end', "ok", {"winner": "DRAW"})
+            r = requests.post('http://0.0.0.0:8096/end', "ok", {"winner": "DRAW"})
             pass
         elif score > 0:
             # WIN ROBOT
-            # r = requests.post('http://0.0.0.0:8096/end', "ok", {"winner": "ROBOT"})
+            r = requests.post('http://0.0.0.0:8096/end', "ok", {"winner": "ROBOT"})
             pass
         else:
             # WIN HUMAN
-            # r = requests.post('http://0.0.0.0:8096/end', "ok", {"winner": "HUMAN"})
+            r = requests.post('http://0.0.0.0:8096/end', "ok", {"winner": "HUMAN"})
             pass
     else:
         # Spiel geht weiter
 
         # send move to robot service
-        # r = requests.post('http://0.0.0.0:8096/move', "ok", {"col": moveCol + 1, "row": moveRow + 1})
+        # positionToSend = '{"row": ' + str(moveCol) + ', "col": ' + str(moveRow) + '}'
+        # positionToSend = json.loads(positionToSend)
+        r = requests.post('http://localhost:8096/move', json={"col": moveCol, "row": moveRow})
         pass
 
     return {"col": moveCol + 1, "row": moveRow + 1}

@@ -4,7 +4,7 @@ HUMAN_PIECE = 'h'
 AI_PIECE = 'r'
 EMPTY_PIECE = '0'
 
-DEBUG_MINIMAX = False
+DEBUG_MINIMAX = True
 
 COLUMNS = 7
 ROWS = 6
@@ -30,6 +30,7 @@ class Minimax():
 
     def get_row(self, board, col):
         for row in range(ROWS):
+            print(row, col)
             if board[row][col] == EMPTY_PIECE:
                 return row
 
@@ -73,7 +74,7 @@ class Minimax():
             for row in range(ROWS):
                 if board[row][col] == piece and board[row-1][col+1] == piece and board[row-2][col+2] == piece and board[row-3][col+3] == piece:
                     if DEBUG_MINIMAX:
-                        print("###shrinking diagonal win")
+                        print("###shrinking diagonal win", row, col)
                     return True
 
         return False
@@ -91,6 +92,9 @@ class Minimax():
         return temp
 
     def terminal(self, board):
+        print(self.check_win(board, HUMAN_PIECE))
+        print(self.check_win(board, AI_PIECE))
+        print(len(self.get_valid_locations(board)))
         return self.check_win(board, HUMAN_PIECE) or self.check_win(board, AI_PIECE) or len(self.get_valid_locations(board)) == 0
 
     # look at a part that contains 4 locations and rate as score
