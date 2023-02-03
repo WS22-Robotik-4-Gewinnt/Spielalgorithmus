@@ -20,7 +20,7 @@ class Minimax():
 
     def choose_column(self, board):
         self.board = [x[:] for x in board]
-        col, minimax_score = self.mini_max(self.board, self.difficulty, True, -1000, 1000) # MOD Parameters Alpha-Beta-Pruning
+        col, minimax_score = self.mini_max(self.board, self.difficulty, True, -1000, 1000) # M add parameters alpha-beta-pruning
         if col is not None:
             row = self.get_row(self.board, col)
         else:
@@ -47,7 +47,6 @@ class Minimax():
 
     def check_win(self, board, player_piece):
         piece = player_piece
-        #print("***********+++ current piece: " + str(piece))
 
         # check for horizontal win
         for col in range(COLUMNS-3):
@@ -155,8 +154,8 @@ class Minimax():
         #print("current score for whole board: " + str(score))
         return score
 
-    # MOD mini_max() was extended with alpha-beta pruning, Parameters alpha and beta were added and corresponding comparisons/conditions were set
-    def mini_max(self, board, depth, maximizing_player, alpha, beta): # MODIFICATION
+    # M mini_max() was extended with alpha-beta pruning, Parameters alpha and beta were added and corresponding comparisons/conditions were set
+    def mini_max(self, board, depth, maximizing_player, alpha, beta): # M
         possible_cols = self.get_valid_locations(board)
         is_terminal = self.terminal(board)
 
@@ -177,7 +176,7 @@ class Minimax():
             # iterate over possible columns
             for col in possible_cols:
                 copy = self.make_move(board, col, AI_PIECE)
-                new_score = self.mini_max(copy, depth - 1, False, alpha, beta)[1] # MOD
+                new_score = self.mini_max(copy, depth - 1, False, alpha, beta)[1] # M
 
                 if DEBUG_MINIMAX:
                     print("maximize: " + str(value) + " " + "new_score: " + str(new_score) + " column: " + str(col) + " depth: " + str(depth))
@@ -186,9 +185,9 @@ class Minimax():
                     value = new_score
                     column = col
 
-                alpha = max(alpha, value) # MOD
-                if beta <= alpha:         # MOD
-                    break                 # MOD beta cut-off
+                alpha = max(alpha, value) # M
+                if beta <= alpha:         # M
+                    break                 # M beta cut-off
 
             return column, value
 
@@ -199,7 +198,7 @@ class Minimax():
 
             for col in possible_cols:
                 copy = self.make_move(board, col, HUMAN_PIECE)
-                new_score = self.mini_max(copy, depth-1, True, alpha, beta)[1] # MOD
+                new_score = self.mini_max(copy, depth-1, True, alpha, beta)[1] # M
 
                 if DEBUG_MINIMAX:
                     print("minimize: " + str(value) + " " + "new_score: " + str(new_score) + " column: " + str(col) + " depth: " + str(depth))
@@ -208,9 +207,9 @@ class Minimax():
                     value = new_score
                     column = col
 
-                beta = min(beta, value) # MOD
-                if beta <= alpha:       # MOD
-                    break               # MOD alpha cut-off
+                beta = min(beta, value) # M
+                if beta <= alpha:       # M
+                    break               # M alpha cut-off
 
             return column, value
 
