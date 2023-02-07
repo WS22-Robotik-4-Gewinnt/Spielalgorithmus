@@ -113,7 +113,7 @@ async def updateBoard(newBoard: Board):
             # WIN ROBOT
             r = requests.post('http://0.0.0.0:8096/end', json={"winner": "ROBOT"})
             pass
-        else:
+        elif score < 0:
             r = requests.post('http://localhost:8096/move', json={"col": moveCol, "row": moveRow})
             # WIN HUMAN
             r = requests.post('http://0.0.0.0:8096/end', json={"winner": "HUMAN"})
