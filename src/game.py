@@ -2,7 +2,7 @@ from os import system, name
 from random import randint
 
 from algos.Random import Random
-from algos.Minimax import Minimax
+from algos import Minimax
 from utils import full_board, check_win, make_move
 
 import sys
@@ -45,7 +45,7 @@ def main():
     print("Welcome to the game connect four!")
     print("*************************************")
     print_board()
-
+    
     # check the chosen mode
     if game_mode == "random":
         modus = Random(board, ROWS, COLUMNS, AI_PIECE, HUMAN_PIECE)
