@@ -104,17 +104,14 @@ async def updateBoard(newBoard: Board):
         # SPIELENDE
         print("Ende")
         if score == 0:
-            r = requests.post('http://localhost:8096/move', json={"col": moveCol, "row": moveRow})
             # DRAW
             r = requests.post('http://0.0.0.0:8096/end', json={"winner": "DRAW"})
             pass
         elif score > 0:
-            r = requests.post('http://localhost:8096/move', json={"col": moveCol, "row": moveRow})
             # WIN ROBOT
             r = requests.post('http://0.0.0.0:8096/end', json={"winner": "ROBOT"})
             pass
         else:
-            r = requests.post('http://localhost:8096/move', json={"col": moveCol, "row": moveRow})
             # WIN HUMAN
             r = requests.post('http://0.0.0.0:8096/end', json={"winner": "HUMAN"})
             pass
