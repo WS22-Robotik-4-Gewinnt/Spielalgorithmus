@@ -9,7 +9,7 @@ DEBUG_MINIMAX = False
 COLUMNS = 7
 ROWS = 6
 
-class Minimax():
+class Minimax_Alpha_Beta():
 
     board = []
     difficulty = 0
