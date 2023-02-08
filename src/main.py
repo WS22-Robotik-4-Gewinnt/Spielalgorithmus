@@ -98,24 +98,9 @@ async def updateBoard(newBoard: Board):
 
     # run minimax
     mini = Minimax.Minimax(board, newBoard.Difficulty)
-    moveCol, moveRow, score = mini.choose_column(board)
+    moveCol, moveRow, winner = mini.choose_column(board)
 
-    if moveCol is None:
-        # SPIELENDE
-        print("Ende")
-        if score == 0:
-            # DRAW
-            r = requests.post('http://0.0.0.0:8096/end', json={"winner": "DRAW"})
-            pass
-        elif score > 0:
-            # WIN ROBOT
-            r = requests.post('http://0.0.0.0:8096/end', json={"winner": "ROBOT"})
-            pass
-        else:
-            # WIN HUMAN
-            r = requests.post('http://0.0.0.0:8096/end', json={"winner": "HUMAN"})
-            pass
-    else:
+    if winner == "NONE":
         # Spiel geht weiter
 
         # send move to robot service
@@ -123,7 +108,29 @@ async def updateBoard(newBoard: Board):
         # positionToSend = json.loads(positionToSend)
         r = requests.post('http://localhost:8096/move', json={"col": moveCol, "row": moveRow})
         pass
-        #"col": +str(moveCol) + 1, "row": + str(moveRow) + 1
+        # "col": +str(moveCol) + 1, "row": + str(moveRow) + 1
+    else:
+        # SPIELENDE
+        print("Ende")
+        if winner == "DRAW":
+            # DRAW
+            # draw could have happened at either turn so we have to decide if we still have to make the robot move
+            if moveCol is not None:
+                r = requests.post('http://localhost:8096/move', json={"col": moveCol, "row": moveRow})
+
+            r = requests.post('http://0.0.0.0:8096/end', json={"winner": "DRAW"})
+            pass
+        elif winner == "ROBOT":
+            # WIN ROBOT
+            # make last move AND win
+            r = requests.post('http://localhost:8096/move', json={"col": moveCol, "row": moveRow})
+            r = requests.post('http://0.0.0.0:8096/end', json={"winner": "ROBOT"})
+            pass
+        else:
+            # WIN HUMAN
+            # do not make a move AND win
+            r = requests.post('http://0.0.0.0:8096/end', json={"winner": "HUMAN"})
+            pass
     return {}
 
 
