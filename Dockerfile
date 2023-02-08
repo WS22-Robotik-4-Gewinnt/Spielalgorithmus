@@ -1,4 +1,5 @@
-FROM python:3.8.16-slim-bullseye
+FROM --platform=linux/arm64/v8 python:3.9
+
 
 # WORKDIR /src
 
