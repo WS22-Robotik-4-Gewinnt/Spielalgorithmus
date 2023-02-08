@@ -11,7 +11,7 @@ DEBUG_MINIMAX = False
 COLUMNS = 7
 ROWS = 6
 
-class Minimax():
+class Minimax_Alpha_Beta_MLP():
 
     board = []
     difficulty = 0
@@ -19,7 +19,7 @@ class Minimax():
     def __init__(self, board, difficulty):
         self.board = [x[:] for x in board]
         self.difficulty = difficulty
-        self.MLP_clf = pickle.load(open('MLP_clf.data', 'r')) # M uses the pickle library to load a pre-trained MLP-classifier and uses it to determine the best move for the AI player
+        self.MLP_clf = pickle.load(open('MLP_clf.data', 'rb')) # M uses the pickle library to load a pre-trained MLP-classifier and uses it to determine the best move for the AI player
 
     def choose_column(self, board):
         self.board = [x[:] for x in board]
