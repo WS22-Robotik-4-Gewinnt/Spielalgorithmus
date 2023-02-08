@@ -22,7 +22,7 @@ COMP_PIECE = 2
 WINDOW_LENGTH = 4
 
 
-## Initialisierung
+#Initialising
 def createBoard():
     board = np.zeros((Reihen, Spalten))
     return board
