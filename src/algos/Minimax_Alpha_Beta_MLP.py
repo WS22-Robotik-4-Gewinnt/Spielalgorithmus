@@ -120,7 +120,7 @@ class Minimax_Alpha_Beta_MLP():
         return self.check_win(board, HUMAN_PIECE) or self.check_win(board, AI_PIECE) or len(self.get_valid_locations(board)) == 0
 
     # M returns pandas DataFrame representing the playing field, columns are labeled with letters (A to G) and the numbers 1 to 6
-    def getState(board):                                  
+    def getState(self, board):                                  
         state = []                                        
         
         for i in range(len(board)): # M the board is split into a list 
@@ -129,9 +129,9 @@ class Minimax_Alpha_Beta_MLP():
 
         state = pd.DataFrame(data = state).T # M converted into a pandas DataFrame
 
-        state[state == "X"] = 1 # M values for "X", "O" and " " are converted to 1, -1 and 0
-        state[state == " "] = 0
-        state[state == "O"] = -1
+        state[state == "h"] = 1 # M values for "h", "r" and "0" are converted to 1, -1 and 0
+        state[state == "0"] = 0
+        state[state == "r"] = -1
 
         width = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
         height = range(1, 7)
