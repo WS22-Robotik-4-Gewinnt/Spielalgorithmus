@@ -19,17 +19,35 @@ class Minimax_Alpha_Beta():
         self.difficulty = difficulty
 
     def choose_column(self, board):
+        winner = "NONE"
         self.board = [x[:] for x in board]
         col, minimax_score = self.mini_max(self.board, self.difficulty, True, -1000, 1000) # M add parameters alpha-beta-pruning
         if col is not None:
             row = self.get_row(self.board, col)
+
+            # Check if the move ends the game
+            copy = self.make_move(board, col, AI_PIECE)
+            if len(self.get_valid_locations(copy)) == 0:
+                winner = "DRAW"
+            elif self.check_win(copy, AI_PIECE):
+                winner = "ROBOT"
         else:
             row = None
+            if minimax_score == 0:
+                winner = "DRAW"
+            elif minimax_score > 100000:
+                winner = "ROBOT"
+            elif minimax_score < -100000:
+                winner = "HUMAN"
+
+
         print("==================")
         print("the winning col: " + str(col))
         print("score for move :" + str(minimax_score))
         self.printBoard(board)
-        return col, row, minimax_score
+
+        #return col, row, minimax_score
+        return col, row, winner
 
     def get_row(self, board, col):
         for row in range(ROWS):
