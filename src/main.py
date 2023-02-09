@@ -15,6 +15,8 @@ LOG = "logging_data.log"
 logging.basicConfig(filename=LOG, filemode="w", level=logging.DEBUG)
 
 
+target_ip = "http://172.17.0.1"
+
 #########################
 # 6 0  0  0  0  0  0  0 #
 # 5 0  0  0  0  0  0  0 #
@@ -106,7 +108,7 @@ async def updateBoard(newBoard: Board):
         # send move to robot service
         # positionToSend = '{"row": ' + str(moveCol) + ', "col": ' + str(moveRow) + '}'
         # positionToSend = json.loads(positionToSend)
-        r = requests.post('http://localhost:8096/move', json={"col": moveCol, "row": moveRow})
+        r = requests.post(target_ip + ':8096/move', json={"col": moveCol, "row": moveRow})
         pass
         # "col": +str(moveCol) + 1, "row": + str(moveRow) + 1
     else:
@@ -116,26 +118,26 @@ async def updateBoard(newBoard: Board):
             # DRAW
             # draw could have happened at either turn so we have to decide if we still have to make the robot move
             if moveCol is not None:
-                r = requests.post('http://localhost:8096/move', json={"col": moveCol, "row": moveRow})
+                r = requests.post(target_ip + ':8096/move', json={"col": moveCol, "row": moveRow})
 
-            r = requests.post('http://0.0.0.0:8096/end', json={"winner": "DRAW"})
+            r = requests.post(target_ip + ':8096/end', json={"winner": "DRAW"})
             pass
         elif winner == "ROBOT":
             # WIN ROBOT
             # make last move AND win
-            r = requests.post('http://localhost:8096/move', json={"col": moveCol, "row": moveRow})
-            r = requests.post('http://0.0.0.0:8096/end', json={"winner": "ROBOT"})
+            r = requests.post(target_ip + ':8096/move', json={"col": moveCol, "row": moveRow})
+            r = requests.post(target_ip + ':8096/end', json={"winner": "ROBOT"})
             pass
         else:
             # WIN HUMAN
             # do not make a move AND win
-            r = requests.post('http://0.0.0.0:8096/end', json={"winner": "HUMAN"})
+            r = requests.post(target_ip + ':8096/end', json={"winner": "HUMAN"})
             pass
     return {}
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", port=8093, log_level="info")
+    uvicorn.run("main:app", port=8093, host="0.0.0.0", log_level="info")
 
 # PORT Bildverarbeitung: 8090
 # PORT Spielalgorithmus: 8093
