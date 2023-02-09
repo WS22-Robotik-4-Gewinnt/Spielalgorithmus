@@ -125,3 +125,52 @@ Min hingegen versucht den Score zu verkleinern.
 #### Programmiersprache / Tools
 Der Algorithmus wurde in Python implementiert.
 Zur Implementierung wurden keine externen Bibliotheken eingesetzt.
+
+### Alpha-Beta-Optimierung
+Der oben gezeigte Minimax-Algorithmus kann durch Alpha-Beta-Optimierung beschleunigt werden, indem man zusätzliche
+Argumente für die aktuelle untere und obere Schranke (Alpha und Beta) hinzufügt. Alpha und Beta dienen dazu, den
+Suchbereich des Algorithmus zu beschränken, indem bereits frühzeitig bestimmte Zweige des Suchbaums abgeschnitten werden,
+sobald keine besseren Ergebnisse mehr erwartet werden. 
+
+Während der Ausführung des Algorithmus werden die untere Schranke Alpha und die obere Schranke Beta für jeden Knoten
+aktualisiert. Wenn "Alpha >= Beta" dann wird das aktuelle Unterknoten frühzeitig beendet, da es keine Auswirkung mehr auf
+das Endresultat hat, egal ob es weiter ausgeführt wird oder nicht.
+
+#### Pseudocode Alpha-Beta-Optimierung
+```python
+def mini_max(board, depth, maximizing_player, alpha, beta):
+    if depth == 0 or is_terminal:
+        return col, heuristic value
+
+    if maximizing_player:
+        value = -1000
+        for col in possible_cols:
+            new_score = self.mini_max(board_copy, depth - 1, False, alpha, beta)[1]
+            if new_score > value:
+                value = new_score
+                column = col
+            alpha = max(alpha, value)
+            if alpha >= beta:
+                break
+        return column, value
+
+    else:
+        value = 1000
+        for col in possible_cols:
+            new_score = self.mini_max(board_copy, depth - 1, True, alpha, beta)[1]
+            if new_score < value:
+                value = new_score
+                column = col
+            beta = min(beta, value)
+            if alpha >= beta:
+                break
+        return column, value
+```
+
+Sobald Alpha >= Beta ist, dann bedeutet das, dass der aktuell minimierende Spieler einen besseren Zug machen kann, als der
+maximierende Spieler jemals erreichen wird. In diesem Fall kann die Suche beendet werden, da es keinen Sinn macht, weitere
+Züge zu untersuchen, da dies nicht mehr zu einer Verbesserung führen würde. Der Zug des aktuellen Spielers ist quasi für
+den gegnerischen Spieler ungünstiger, als dessen optimales Ergebnis. 
+
+### Neuronales Netz als Bewertungsfunktion
+...
